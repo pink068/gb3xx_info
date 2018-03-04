@@ -6,7 +6,7 @@ To simplify teh data reading my web server scours the internet for information a
 Example:
 10 this is the message.
 
-then program knows that this has a priority of 10, transmit every 10 minutes
+The program knows that this has a priority of 10, transmit every 10 minutes (priority 100 is don't transmit)
 it then turns "this is the message" into a digital speech wav file, and plays the WAV
 
 
