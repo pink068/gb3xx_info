@@ -7,6 +7,7 @@
 #include <malloc.h>
 #include "say.h"
 
+char longsaymessage[10000];
 
 // [0] maps to accii 48 (0)
 char phonetic[][65]={"zerow.","1.","2.","3.","4.","5.","6.","7.","8.","9.", \
@@ -21,6 +22,27 @@ int Say::Initialise(void)
 {
 	  return 0;
 }
+
+int Say::BuildMessage(char * message)
+{
+  strcat(longsaymessage,message);
+  strcat(longsaymessage,".... " );
+  return 0;
+}
+
+int Say::SayMessage(void)
+{
+  char bigmessage[10000];
+  sprintf(bigmessage,"pico2wave -l en-GB -w temp.wav \"%s\"", longsaymessage);
+//  printf("[%s]\n" ,bigmessage);
+  longsaymessage[0]=0;
+  system(bigmessage);
+  system("aplay -q temp.wav");  
+  return 0;
+}
+
+
+
 
 int Say::Announce(void)
 {

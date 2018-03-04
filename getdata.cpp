@@ -5,52 +5,60 @@
 #include "getdata.h"
 #include <curses.h>
 
-// kp numbers
-// 8 = all UK
-// 7 = north of london
-// 6 = north of newcastle
-// 5 = scottish islands
-
-int FilterPage(char * dest, char * source)
-{
-	int reply;
-	source[2]=0;
-	reply = atoi(source);
-	strcpy(dest,&source[3]);
-	return reply;
-}
-
-
 int AnnounceData::Update(void)
 {
-   char localbuffer[2000];
+   char localbuffer[10000];
+   char * start;
+   char * end;
+   int index;
+   char temp[1000];
+   
    mvaddstr(5,2, "Reading Data");
    refresh();
+   GetPage(localbuffer,(char*)"http://alphacharlie.org.uk/gb3xx_info.php");
+//  strcpy(localbuffer, "12;Aurora state 0.67 KP. No visibility;34; 40 meters Open.. 30 meters Open..;00;The weather is forecasted to be light drizzle with daytime temperature reaching 4 °c. Night time temperature are expected to be 1 °c.We expect around 3.1 mm of precipitation to fall. The visibility is going to be around 11 km i.e. 6 miles and an atmospheric pressure of 989 mb. We expect around 3.1 mm of precipitation to fall and cloud covering 98% of the sky, the humidity will be around 99%.;");
+//  strcat(localbuffer,";;");
 
-   GetPage(localbuffer,(char*)"http://alphacharlie.org.uk/gb3xx_aurora.php");
-   Aurgency = FilterPage(AuroraMessage, localbuffer);
-   mvaddstr(6,2, AuroraMessage);
-   refresh();
-   
-   GetPage(localbuffer,(char*)"http://alphacharlie.org.uk/gb3xx_hf.php");
-   HFurgency = FilterPage(HFMessage, localbuffer);
-   mvaddstr(7,2, HFMessage);
-   refresh();
 
-   GetPage(localbuffer,(char*)"http://alphacharlie.org.uk/gb3xx_weather.php");
-   Wurgency = FilterPage(WeatherMessage, localbuffer);
-   mvaddstr(11,2, WeatherMessage);
-   refresh();
+ 	index=0;
+  start = localbuffer;
+  temp[0]=0;
+  do
+  {
+    end = strstr(start,";");
+    if (!end ) break;
+    end[0]=0;   // null the string end
+    strcpy(temp,start);
+    urgency[index]=atoi(temp);
+    start=end+1;
+    
+    end = strstr(start,";");
+    if (!end ) break;
+    end[0]=0;   // null the string end
+    strcpy(message[index],start);        
+    start=end+1;
+    
+    index++;
+       
+  } while (end);
    return 0;
 }
 
 int AnnounceData::Init(void)
 {
-	AuroraMessage[0]=0;
-	HFMessage[0]=0;
-	WeatherMessage[0]=0;	
-   return 0;
+int a;
+  for(a=0;a<10;a++)
+  {
+	message[a][0]=0;
+	urgency[a]=0;
+  }
+  return 0;
 }
+
+
+
+
+
 
 
 

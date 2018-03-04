@@ -26,6 +26,9 @@ int main()
   LastSquelchState=Port_NotValid;
 
   info.Update();      
+  SendInfo();
+
+
   init_pair(1, COLOR_GREEN, COLOR_BLACK);
   init_pair(2, COLOR_WHITE, COLOR_GREEN);
   init_pair(3, COLOR_GREEN, COLOR_BLACK);  
@@ -42,21 +45,22 @@ int main()
     ports.Scan();
     
     leds.SetStatus(LED_1,ports.Squelch);     
-//    inuse = RepeaterLogic();
+    inuse = RepeaterLogic();
     
     if( ports.DataRefresh)
     {
 		info.Update();
 		ports.DataRefresh=0;
 	}
-    inuse=0;
     if(!inuse) SendInfo();
     
   }
 
   endwin();
+ 
   return 0;
 }
+
 
 int RepeaterLogic(void)
 {
@@ -92,11 +96,17 @@ int RepeaterLogic(void)
 
 int SendInfo(void)
 {
-  int send;
+  int index;
   
-  send =1;
-  if (info.Aurgency > 0) send =1;
-  if(send >0) Speak.SayText(info.AuroraMessage);
- 
+  for(index=0;index<10;index++)
+  {
+//    printf("%i:%s\n",info.urgency[index],info.message[index]);
+    if(info.urgency[index]>0) 
+    {
+      Speak.BuildMessage(info.message[index]);
+    }
+  }
+  Speak.SayMessage(); 
   return 1;
 }
+

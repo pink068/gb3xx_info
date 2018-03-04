@@ -10,6 +10,9 @@ class Say
         
 	public:
 	  int Initialise(void);
+    int BuildMessage(char*);
+    int SayMessage(void);
+    
     int SayText (char * subject);
     // if shortmess =1 it says the short message
 
