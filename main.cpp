@@ -4,6 +4,9 @@
 #include "hardware.h"
 #include "getdata.h"
 #include "say.h"
+#include <stdlib.h>
+#include <libcw.h>
+
 
 StatusBar leds;
 Hardware ports;
@@ -23,11 +26,16 @@ int main()
   ports.Init();
   info.Init();
   Speak.Initialise();
+  
   LastSquelchState=Port_NotValid;
 
-  info.Update();      
-  SendInfo();
+//  info.Update();      
+//  SendInfo();
 
+  cw_generator_new(CW_AUDIO_SOUNDCARD, NULL);
+  cw_generator_start();
+//  printf("%d",cw_get_send_speed());
+  cw_set_send_speed(18);
 
   init_pair(1, COLOR_GREEN, COLOR_BLACK);
   init_pair(2, COLOR_WHITE, COLOR_GREEN);
@@ -49,17 +57,22 @@ int main()
     
     if( ports.DataRefresh)
     {
-		info.Update();
-		ports.DataRefresh=0;
-	}
+      info.Update();
+      ports.DataRefresh=0;
+    }
     if(!inuse) SendInfo();
     
   }
 
   endwin();
- 
+  cw_generator_stop();
+  cw_generator_delete();  
   return 0;
 }
+
+
+
+
 
 
 int RepeaterLogic(void)
@@ -80,8 +93,8 @@ int RepeaterLogic(void)
     leds.SetStatus(LED_3,LED_ON);
     ports.Set(Port_PTT);
     
- //   Morse(CW_K);
-	usleep(1000000);
+    cw_send_character('K');
+    cw_wait_for_tone_queue();
     LastSquelchState=Port_NotValid;
     ports.Clear(Port_PTT);
     leds.Name(LED_3,"RX");
