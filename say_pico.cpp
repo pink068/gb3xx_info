@@ -7,8 +7,6 @@
 #include <malloc.h>
 #include "say.h"
 
-char longsaymessage[10000];
-
 // [0] maps to accii 48 (0)
 char phonetic[][65]={"zerow.","1.","2.","3.","4.","5.","6.","7.","8.","9.", \
 ". , .","Semicolon","less than","equal","greater than","question","at", \
@@ -23,25 +21,14 @@ int Say::Initialise(void)
 	  return 0;
 }
 
-int Say::BuildMessage(char * message)
-{
-  strcat(longsaymessage,message);
-  strcat(longsaymessage,".... " );
-  return 0;
-}
-
-int Say::SayMessage(void)
+int Say::SayMessage(char * message)
 {
   char bigmessage[10000];
-  sprintf(bigmessage,"pico2wave -l en-GB -w temp.wav \"%s\"", longsaymessage);
-//  printf("[%s]\n" ,bigmessage);
-  longsaymessage[0]=0;
+  sprintf(bigmessage,"pico2wave -l en-GB -w temp.wav \"%s\"", message);
   system(bigmessage);
   system("aplay -q temp.wav");  
   return 0;
 }
-
-
 
 
 int Say::Announce(void)
@@ -89,28 +76,6 @@ int Say::TimeSignal(int hours)
   return 0;  
 }
   
-
-
-int Say::SayText ( char * subject)
-{  
-  char localbuffer[5000];
-  
-  sprintf(localbuffer,"pico2wave -l en-GB -w temp.wav \"%s\"", subject);
-  printf("[%s]\n" ,localbuffer);
-  system(localbuffer);
-  system("aplay temp.wav");
-  return 0;
-}
-
-
-int Say::MakeWav ( char * filename, char * buffer )
-{  
-  char localbuffer[5000];
-  sprintf(localbuffer,"pico2wave -l en-GB -w %s \"%s\"",filename, buffer);
-  system(localbuffer);
-  return 0;
-}
-
 int Say::SayWav ( char * filename )
 {  
   char localbuffer[50];

@@ -13,10 +13,10 @@ int AnnounceData::Update(void)
    int index;
    char temp[1000];
    
-   mvaddstr(5,2, "Reading Data");
+//   mvaddstr(5,2, "Reading Data");
    refresh();
-   GetPage(localbuffer,(char*)"http://alphacharlie.org.uk/gb3xx_info.php");
-//  strcpy(localbuffer, "12;Aurora state 0.67 KP. No visibility;34; 40 meters Open.. 30 meters Open..;00;The weather is forecasted to be light drizzle with daytime temperature reaching 4 °c. Night time temperature are expected to be 1 °c.We expect around 3.1 mm of precipitation to fall. The visibility is going to be around 11 km i.e. 6 miles and an atmospheric pressure of 989 mb. We expect around 3.1 mm of precipitation to fall and cloud covering 98% of the sky, the humidity will be around 99%.;");
+//   GetPage(localbuffer,(char*)"http://alphacharlie.org.uk/gb3xx_info.php");
+  strcpy(localbuffer, "20;Aurora state 0.67 KP. No visibility;30;40 meters Open.. 30 meters Open..;10;Weather.. Light drizzle.. temperature 4 °c.;");
 //  strcat(localbuffer,";;");
 
 
